@@ -1,5 +1,3 @@
-from Structures.Integers import Integers
-
 
 def sfd(f, R):
     assert (f.degree() > 0)
@@ -31,9 +29,11 @@ def distinct_degree_decomposition(f, R):
     q = R.get_domain().get_order()
     fl = [f]
     g = []
+    import Structures.QuotientFiniteField
+    QF = Structures.QuotientFiniteField.QuotientFiniteField(R, f)
     while fl[i] != R.one():
         i = i + 1
-        h.append(R.mod(R.repeated_squaring(h[i - 1], q), f))
+        h.append(QF.repeated_squaring(h[i - 1], q))
         g.append(R.gcd(R.sub(h[i], x), fl[i - 1]))
         fl.append(R.quo(fl[i - 1], g[i - 1]))
     return g
@@ -42,14 +42,17 @@ def distinct_degree_decomposition(f, R):
 def equal_degree_splitting(f, d, R):
     n = f.degree()
     a = R.random_element(n)
-    q = R.get_domain().get_order()
     if len(a.list()) < 2:
         return None
+    q = R.get_domain().get_order()
+    assert(q %2 == 1)
     g1 = R.gcd(a, f)
     if g1 != R.one():
         return g1
-    qd = (Integers().repeated_squaring(q, d) - 1) // 2
-    b = R.mod(R.repeated_squaring(a, qd), f)
+    import Structures.Integers
+    import Structures.QuotientFiniteField
+    qd = (Structures.Integers.Integers().repeated_squaring(q, d) - 1) // 2
+    b = Structures.QuotientFiniteField.QuotientFiniteField(R, f).repeated_squaring(a, qd)
     g2 = R.gcd(R.sub(b, R.one()), f)
     if g2 != R.one() and g2 != f:
         return g2
@@ -64,3 +67,16 @@ def equal_degree_splitting_ktimes(f, d, R, k):
             return g
     # low probability
     return None
+
+
+def equal_degree_full_splitting(f, d, R, k):
+    n = f.degree()
+    if n == d:
+        return [f]
+    g = equal_degree_splitting_ktimes(f, d, R, k)
+    if g is None:
+        return None
+    l1 = equal_degree_full_splitting(g, d, R, k)
+    l2 = equal_degree_full_splitting(R.quo(f, g), d, R, k)
+    l1.extend(l2)
+    return l1

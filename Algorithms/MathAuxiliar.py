@@ -52,3 +52,16 @@ def factorlp(n, lp):
 def factor(n):
     lp = eratostenes(n)
     return factorlp(n, lp)
+
+
+def get_divisors(n):
+    l = []
+    for i in range(1, int(sqrt(n) + 1)):
+        if n % i == 0:
+            # Check if divisors are equal
+            if n // i == i:
+                l.append(i)
+            else:
+                l.append(i)
+                l.append(n // i)
+    return l

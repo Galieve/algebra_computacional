@@ -1,10 +1,13 @@
 from sage.rings.polynomial.polynomial_ring_constructor import PolynomialRing
 
-from Algorithms.FiniteFieldFactorization import sfd, equal_degree_splitting_ktimes, distinct_degree_decomposition
+from Algorithms.Berlekamp import berlekamp_full
+from Algorithms.FiniteFieldFactorization import sfd, distinct_degree_decomposition, \
+    equal_degree_full_splitting
 from Algorithms.IrreducibilityTest import is_irreducible
 from Algorithms.Primitive import primitive_euclidean
-from Structures import Field, FiniteFieldsWrapper
+from Structures import Field
 from Structures.Ring import Ring
+
 
 class Polynomial(Ring):
     R = None
@@ -98,7 +101,7 @@ class Polynomial(Ring):
         lf = f.list()
         l = []
         for i in range(1, len(lf)):
-            l.append(lf[i]*i)
+            l.append(lf[i] * i)
         return self.P(l)
 
     def square_free_decomposition(self, f):
@@ -108,8 +111,14 @@ class Polynomial(Ring):
     def distinct_degree_decomposition(self, f):
         return distinct_degree_decomposition(f, self)
 
+    def random_element_lim(self, a, b):
+        return self.P.random_element(degree=(a, b))
+
     def random_element(self, n):
         return self.P.random_element(degree=(0, n))
 
     def equal_degree_splitting(self, f, d, k):
-        return equal_degree_splitting_ktimes(f, d, self, k)
+        return equal_degree_full_splitting(f, d, self, k)
+
+    def berlekamp(self, f, k):
+        return berlekamp_full(f, self, k)

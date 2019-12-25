@@ -1,4 +1,4 @@
-from Ring import *
+from Ring import Ring
 from abc import ABCMeta, abstractmethod
 
 
@@ -13,4 +13,3 @@ class Field(Ring):
             return self.zero()
         else:
             return self.one()
-

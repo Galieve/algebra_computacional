@@ -52,3 +52,6 @@ class FiniteFieldsWrapper(Field):
 
     def get_order(self):
         return self.p**self.k
+
+    def get_random(self):
+        return self.galoisField.random_element()

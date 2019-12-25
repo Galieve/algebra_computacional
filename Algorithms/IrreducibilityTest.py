@@ -4,6 +4,7 @@ from sage.functions.other import sqrt, ceil
 from MathAuxiliar import to_binary, factor
 
 
+
 def repeated_squaring(a, n, R):
     l = to_binary(n)
     k = len(l) - 1
@@ -99,7 +100,9 @@ def compute_power(bn, lp, f, R):
 
 def is_irreducible(f, R):
     x = R.get_variable()
-    xq = R.mod(repeated_squaring(x, R.get_domain().get_order(), R), f)
+    import Structures.QuotientFiniteField
+    QF = Structures.QuotientFiniteField.QuotientFiniteField(R, f)
+    xq = QF.repeated_squaring(x, R.get_domain().get_order())
     n = f.degree()
     bn = to_binary(n)
     lp = list_of_powers(len(bn), xq, f, R)

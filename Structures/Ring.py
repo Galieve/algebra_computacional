@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 from Algorithms.Chinese import chinese_reminder
 from Algorithms.Euclides import euclides, extended_euclides
-from Algorithms.IrreducibilityTest import repeated_squaring
+import Algorithms.IrreducibilityTest
 
 
 class Ring:
@@ -84,4 +84,4 @@ class Ring:
         return chinese_reminder(m_list, u_list, self.phi, self.reciprocal, self.mul, self.add, self.sub)
 
     def repeated_squaring(self,a, n):
-        return repeated_squaring(a, n, self)
+        return Algorithms.IrreducibilityTest.repeated_squaring(a, n, self)
