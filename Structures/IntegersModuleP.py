@@ -47,5 +47,16 @@ class IntegersModuleP(Field):
     def normal(self, a):
         return super(IntegersModuleP, self).normal(self.canonical(a));
 
+    def multiplicative_order(self, n):
+        if n == self.zero():
+            return 0
+        elif n == self.one():
+            return 1
+        acum = n
+        for i in range(2, self.p):
+            acum = self.mul(acum, n)
+            if acum == self.one():
+                return i
+
     def get_true_value(self):
         return IntegerModRing(self.p)

@@ -1,4 +1,4 @@
-from math import ceil, sqrt
+from math import ceil, sqrt, log, floor
 
 
 def to_binary(n):
@@ -56,7 +56,7 @@ def factor(n):
 
 def get_divisors(n):
     l = []
-    for i in range(1, int(sqrt(n) + 1)):
+    for i in range(1, int(sqrt(n*1.0) + 1)):
         if n % i == 0:
             # Check if divisors are equal
             if n // i == i:
@@ -65,3 +65,4 @@ def get_divisors(n):
                 l.append(i)
                 l.append(n // i)
     return l
+
