@@ -40,7 +40,7 @@ def AKS(n):
     IMP = Structures.IntegersModuleP.IntegersModuleP(n)
     R = Structures.Polynomial.Polynomial(IMP, 'x')
     x = R.get_variable()
-    modP = x**r - 1
+    modP = R.sub(R.repeated_squaring(x,r),1)
     for j in range (1, 2*k*rs + 1 + 1):
         lp = R.mod(R.repeated_squaring(R.add(x,j),n), modP)
         rp = R.mod(R.add(R.repeated_squaring(x,n),j), modP)
