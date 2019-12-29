@@ -1,3 +1,4 @@
+from Algorithms.DiscreteLogarithm import discrete_logarithm
 from Ring import Ring
 from abc import ABCMeta, abstractmethod
 
@@ -13,3 +14,22 @@ class Field(Ring):
             return self.zero()
         else:
             return self.one()
+
+    @abstractmethod
+    def get_order(self):
+        pass
+
+    def discrete_logarithm(self, a, b):
+        return discrete_logarithm(a, b, self)
+
+    def multiplicative_order(self, n):
+        if n == self.zero():
+            return 0
+        elif n == self.one():
+            return 1
+        q = self.get_order()
+        acum = n
+        for i in range(2, q):
+            acum = self.mul(acum, n)
+            if acum == self.one():
+                return i
