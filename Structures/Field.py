@@ -1,4 +1,4 @@
-from Algorithms.DiscreteLogarithm import discrete_logarithm
+from Algorithms.DiscreteLogarithm import discrete_logarithm, discrete_logarithm_n
 from Ring import Ring
 from abc import ABCMeta, abstractmethod
 
@@ -21,6 +21,9 @@ class Field(Ring):
 
     def discrete_logarithm(self, a, b):
         return discrete_logarithm(a, b, self)
+
+    def discrete_logarithm_n(self, a ,b, n):
+        return discrete_logarithm_n(a, b, self, n)
 
     def multiplicative_order(self, n):
         if n == self.zero():

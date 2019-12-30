@@ -27,10 +27,10 @@ class IntegersModuleP(Field):
         return 0
 
     def add(self, a, b):
-        return (a + b) % self.p;
+        return (self.canonical(a) + self.canonical(b)) % self.p;
 
     def mul(self, a, b):
-        return (a * b) % self.p
+        return (self.canonical(a) * self.canonical(b)) % self.p
 
     def quo_rem(self, a, b):
         return self.mul(a, self.inverse(b)), self.zero()
@@ -42,7 +42,7 @@ class IntegersModuleP(Field):
         if a < 0:
             b = self.opposite(a) % self.p
             a = self.opposite(b)
-        return self.add(a, self.p) % self.p
+        return (a + self.p) % self.p
 
     def normal(self, a):
         return super(IntegersModuleP, self).normal(self.canonical(a));

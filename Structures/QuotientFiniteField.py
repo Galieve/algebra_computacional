@@ -1,7 +1,8 @@
-import Ring
+import Field
 
 
-class QuotientFiniteField(Ring.Ring):
+class QuotientFiniteField(Field.Field):
+
     R = None;
 
     f = None
@@ -37,3 +38,9 @@ class QuotientFiniteField(Ring.Ring):
 
     def get_true_value(self):
         pass
+
+    def inverse(self, a):
+        pass
+
+    def get_order(self):
+        return self.R.get_domain().get_order()**self.f.degree()

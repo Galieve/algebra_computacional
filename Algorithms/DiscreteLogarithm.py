@@ -5,16 +5,12 @@ def new_xab(alpha, beta, x, a, b, R, IMP):
     if x0 % 3 == 0:
         return R.mul(x, x), IMP.mul(2, a), IMP.mul(2, b)
     elif x0 % 3 == 1:
-        return R.mul(beta, x), IMP.add(a, IMP.one()), b
+        return R.mul(beta, x), a, IMP.add(b, IMP.one())
     else:
-        return R.mul(alpha, x), a, IMP.add(b, IMP.one())
+        return R.mul(alpha, x), IMP.add(a, IMP.one()), b
 
 
-# output => beta**out = alpha
-def discrete_logarithm(alpha, beta, R):
-    n = R.multiplicative_order(beta)
-    #n = R.get_order() - 1
-     #print beta, n
+def discrete_logarithm_n(alpha, beta, R, n):
     import Structures.IntegersModuleP
     IMP = Structures.IntegersModuleP.IntegersModuleP(n)
     import Structures.Integers
@@ -25,19 +21,21 @@ def discrete_logarithm(alpha, beta, R):
     x_ = R.one()
     a_ = IMP.zero()
     b_ = IMP.zero()
-    for i in range(1, n):
+    for i in range(1, n + 1):
         x, a, b = new_xab(alpha, beta, x, a, b, R, IMP)
         x_, a_, b_ = new_xab(alpha, beta, x_, a_, b_, R, IMP)
         x_, a_, b_ = new_xab(alpha, beta, x_, a_, b_, R, IMP)
         if x == x_:
             r = IMP.sub(b_, b)
             s = IMP.sub(a, a_)
-            if Z.gcd(r,n) != Z.one():
+            if r == IMP.zero() or Z.gcd(s, n) != Z.one():
                 return None
             else:
-                #print alpha, beta, r, n
-                return IMP.mul(IMP.inverse(r), s)
+                return IMP.mul(IMP.inverse(s), r)
     # no deberia entrar por aqui
     return None
 
 
+# output => beta**out = alpha
+def discrete_logarithm(alpha, beta, R):
+    return discrete_logarithm_n(alpha, beta, R, R.multiplicative_order(beta))
