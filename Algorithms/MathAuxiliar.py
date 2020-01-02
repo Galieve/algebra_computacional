@@ -53,8 +53,12 @@ def factor(n):
     lp = eratostenes(n)
     return factorlp(n, lp)
 
-
+#devuelve todos los divisores positivos del numero.
 def get_divisors(n):
+    if n == 0:
+        return [0]
+    elif n < 0:
+        n = - n
     l = []
     for i in range(1, int(sqrt(n*1.0) + 1)):
         if n % i == 0:

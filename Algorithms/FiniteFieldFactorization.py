@@ -1,6 +1,6 @@
 
 def sfd(f, R):
-    assert (f.degree() > 0)
+    assert (R.degree(f) > 0)
     l = []
     s = 1
     while f != R.one():
@@ -22,7 +22,7 @@ def sfd(f, R):
 
 
 def distinct_degree_decomposition(f, R):
-    assert (f.degree() > 0)
+    assert (R.degree(f) > 0)
     x = R.get_variable()
     h = [x]  # h0 = x
     i = 0
@@ -40,7 +40,7 @@ def distinct_degree_decomposition(f, R):
 
 
 def equal_degree_splitting(f, d, R):
-    n = f.degree()
+    n = R.degree(f)
     a = R.random_element(n)
     if len(a.list()) < 2:
         return None
@@ -70,7 +70,7 @@ def equal_degree_splitting_ktimes(f, d, R, k):
 
 
 def equal_degree_full_splitting(f, d, R, k):
-    n = f.degree()
+    n = R.degree(f)
     if n == d:
         return [f]
     g = equal_degree_splitting_ktimes(f, d, R, k)

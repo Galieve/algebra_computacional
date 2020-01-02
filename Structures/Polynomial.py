@@ -3,6 +3,7 @@ from sage.rings.polynomial.polynomial_ring_constructor import PolynomialRing
 from Algorithms.Berlekamp import berlekamp_full
 from Algorithms.FiniteFieldFactorization import sfd, distinct_degree_decomposition, \
     equal_degree_full_splitting
+from Algorithms.Kronecker import full_kronecker
 from Algorithms.IrreducibilityTest import is_irreducible
 from Algorithms.Primitive import primitive_euclidean
 from Structures import Field
@@ -60,7 +61,7 @@ class Polynomial(Ring):
     def primitive_part(self, f):
         l = [k for v, k in f.dict().items()]
         c = self.cont(f)
-        if c == 0: return 0
+        if c == 0: return self.zero()
         q, _ = f.quo_rem(c)
         x = self.unit_normal(f)
         q, _ = q.quo_rem(x)
@@ -122,3 +123,19 @@ class Polynomial(Ring):
 
     def berlekamp(self, f, k):
         return berlekamp_full(f, self, k)
+
+    def evaluate(self, f, a):
+        if f == self.zero():
+            return 0
+        fl = f.list()
+        result = fl[-1]
+        for i in range(len(fl) - 2, -1, -1):
+            result = result * a + fl[i]
+        return result
+
+    def degree(self, f):
+        if f == self.zero(): return 0
+        return len(f.list()) - 1
+
+    def kronecker(self, f):
+        return full_kronecker(f, self)

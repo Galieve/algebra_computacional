@@ -5,7 +5,7 @@ def berlekamp1_3(f, R):
     # paso 1
     q = R.get_domain().get_order()
     x = R.get_variable()
-    n = f.degree()
+    n = R.degree(f)
     assert (q % 2 != 0)
     QF = QuotientFiniteField(R, f)
     xq = QF.repeated_squaring(x, q)

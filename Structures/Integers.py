@@ -37,3 +37,6 @@ class Integers(Ring.Ring):
 
     def get_true_value(self):
         return ZZ
+
+    def get_random(self):
+        return ZZ.random_element()

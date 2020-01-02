@@ -19,9 +19,9 @@ def repeated_squaring(a, n, R):
 # f, g, h \in R, type(R) == Ring, issubclassof(R, Polynomial)
 def fast_modular_composition(f, g, h, R):
     assert (f != R.zero())
-    assert (g.degree() < f.degree())
-    assert (h.degree() < f.degree())
-    n = f.degree()
+    assert (R.degree(g) < R.degree(f))
+    assert (R.degree(h) < R.degree(f))
+    n = R.degree(f)
     m = int(ceil(sqrt(n)))
     B = []
     q = g.list()
@@ -101,7 +101,7 @@ def is_irreducible(f, R):
     import Structures.QuotientFiniteField
     QF = Structures.QuotientFiniteField.QuotientFiniteField(R, f)
     xq = QF.repeated_squaring(x, R.get_domain().get_order())
-    n = f.degree()
+    n = R.degree(f)
     bn = to_binary(n)
     lp = list_of_powers(len(bn), xq, f, R)
     a = compute_power(bn, lp, f, R)
