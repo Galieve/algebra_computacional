@@ -70,15 +70,14 @@ class Ring:
         assert (mcd == self.one())
         return self.mod(x, n)
 
-    def gcd(self,a,b):
-        return self.euclides(a,b)
+    def gcd(self, a ,b):
+        return self.euclides(a, b)
 
     def euclides(self, a, b):
-        return euclides(a, b, self.normal, self.mod, self.zero)
+        return euclides(a, b, self)
 
     def extended_euclides(self, a, b):
-        return extended_euclides(a, b, self.normal, self.unit_normal, self.quo, self.mul, self.sub, self.zero,
-                                 self.one);
+        return extended_euclides(a, b, self)
 
     def chinese_reminder(self, m_list, u_list):
         return chinese_reminder(m_list, u_list, self.phi, self.reciprocal, self.mul, self.add, self.sub)
