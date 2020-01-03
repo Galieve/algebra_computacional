@@ -80,7 +80,7 @@ class Ring:
         return extended_euclides(a, b, self)
 
     def chinese_reminder(self, m_list, u_list):
-        return chinese_reminder(m_list, u_list, self.phi, self.reciprocal, self.mul, self.add, self.sub)
+        return chinese_reminder(m_list, u_list, self)
 
     def repeated_squaring(self,a, n):
         return Algorithms.IrreducibilityTest.repeated_squaring(a, n, self)
