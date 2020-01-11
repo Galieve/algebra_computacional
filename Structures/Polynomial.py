@@ -6,19 +6,25 @@ from Algorithms.FiniteFieldFactorization import sfd, distinct_degree_decompositi
 from Algorithms.HenselLifting import hensel_full_lifting
 from Algorithms.Kronecker import full_kronecker
 from Algorithms.IrreducibilityTest import is_irreducible
-from Algorithms.Primitive import primitive_euclidean
+from Algorithms.MultivariableDivision import multivariable_division
+from Algorithms.Primitive import primitive_euclidean, primitive_reminder
 from Structures import Field
 from Structures.Ring import Ring
 
 
 class Polynomial(Ring):
-    R = None
-    P = None
 
-    def __init__(self, F, var):
+    _R = None
+
+    _P = None
+
+    _order = None
+
+    def __init__(self, F, var, order=None):
         super(Polynomial, self).__init__()
-        self.R = F
-        self.P = PolynomialRing(F.get_true_value(), name=var)
+        self._R = F
+        self._P = PolynomialRing(F.get_true_value(), name=var)
+        self._order = order
 
     def one(self):
         return 1 + 0 * self.get_variable()
@@ -40,23 +46,27 @@ class Polynomial(Ring):
 
     # normal(a) == a si el leading_coefficient de a es > 0, sino es -a
     # cuidao!
+
+
     def normal(self, a):
         if a == self.zero():
             return a
-        l = a.list()
-        n = self.R.normal(l[-1])
-        pos = self.R.quo(n, l[-1])
+        lt = self.lt(a)
+        lt_ = lt.list()[-1]
+        n = self._R.normal(lt_)
+        pos = self._R.quo(n, lt_)
         return pos * a
+
 
     def cont(self, f):
         l = [k for v, k in f.dict().items()]
         # len(l) == 0 => f == 0
         if len(l) == 0:
             return 0
-        sol = self.R.normal(l[0])
+        sol = self._R.normal(l[0])
 
         for i in range(1, len(l)):
-            sol = self.R.gcd(sol, l[i])
+            sol = self._R.gcd(sol, l[i])
         return sol
 
     def primitive_part(self, f):
@@ -70,20 +80,20 @@ class Polynomial(Ring):
 
     def gcd(self, a, b):
         # cuidao
-        if issubclass(type(self.R), Field.Field):
+        if issubclass(type(self._R), Field.Field):
             return super(Polynomial, self).gcd(a, b)
         else:
             return primitive_euclidean(a, b, self)
 
     def get_variable(self):
-        (var,) = self.P.gens()
+        (var,) = self._P.gens()
         return var
 
     def get_true_value(self):
-        return self.P
+        return self._P
 
     def get_domain(self):
-        return self.R
+        return self._R
 
     def is_irreducible(self, f):
         return self._finite_field_is_irreducible_(f)
@@ -91,20 +101,20 @@ class Polynomial(Ring):
     def _finite_field_is_irreducible_(self, f):
         return is_irreducible(f, self)
 
-    # solo para polinomios en cuerpos finitos.
+    # solo para polinomios en una variable en cuerpos finitos con el orden por defecto.
     def pth_root(self, f, p):
         lf = f.list()
         l = []
         for i in range(0, len(lf), p):
             l.append(lf[i])
-        return self.P(l)
+        return self._P(l)
 
     def derivate(self, f):
         lf = f.list()
         l = []
         for i in range(1, len(lf)):
             l.append(lf[i] * i)
-        return self.P(l)
+        return self._P(l)
 
     def square_free_decomposition(self, f):
         f = self.normal(f)
@@ -114,10 +124,10 @@ class Polynomial(Ring):
         return distinct_degree_decomposition(f, self)
 
     def random_element_lim(self, a, b):
-        return self.P.random_element(degree=(a, b))
+        return self._P.random_element(degree=(a, b))
 
     def random_element(self, n):
-        return self.P.random_element(degree=(0, n))
+        return self._P.random_element(degree=(0, n))
 
     def equal_degree_splitting(self, f, d, k):
         return equal_degree_full_splitting(f, d, self, k)
@@ -134,7 +144,8 @@ class Polynomial(Ring):
             result = result * a + fl[i]
         return result
 
-    def degree(self, f):
+    # solo para una variable
+    def degree(self, f):  # cuidao
         if f == self.zero(): return 0
         return len(f.list()) - 1
 
@@ -155,7 +166,7 @@ class Polynomial(Ring):
         flist = f.list()
         on = abs(flist[0])
         for i in range(1, len(flist)):
-            on = self.R.add(abs(flist[i]), on)
+            on = self._R.add(abs(flist[i]), on)
         return on
 
     def kronecker(self, f):
@@ -163,3 +174,68 @@ class Polynomial(Ring):
 
     def hensel_lifting(self, f):
         return hensel_full_lifting(f, self)
+
+    def lt(self, f):
+        if f == self.zero():
+            return f
+        elif self._order is None:
+            fl = f.list()
+            if issubclass(type(self._R), Polynomial):
+                l = self._R.lt(fl[-1])
+            else:
+                l = fl[-1]
+            l = self.mul(l, self.repeated_squaring(self.get_variable(), len(fl) - 1))
+            return l
+        else:
+            ls = self.generate_tuple_representation(f)
+            ls = self._order(ls)
+            return self.generate_monomial(ls[-1])
+
+    def generate_monomial(self, (c, l)):
+        if issubclass(type(self._R), Polynomial):
+            sol = self._R.generate_monomial((c, l[1:]))
+        else:
+            sol = c
+        x = self.get_variable()
+        xn = self.repeated_squaring(x, l[0])
+        sol = self.mul(sol, xn)
+        return sol
+
+    def generate_tuple_representation(self, f):
+        l = self._generate_tuple_representation_(f)
+        l_ = []
+        for c, le in l:
+            l_.append((c, list(le)))
+        return l_
+
+    def _generate_tuple_representation_(self, f):
+        import collections
+        fl = f.list()
+        l = []
+        for i in range(0, len(fl)):
+            if fl[i] == self._R.zero():
+                continue
+            elif issubclass(type(self._R), Polynomial):
+                ls = self._R._generate_tuple_representation_(fl[i])
+                for e, le in ls:
+                    le.appendleft(i)
+                    l.append((e, le))
+            else:
+                l.append((fl[i], collections.deque([i])))
+        return l
+
+    def multidegree(self, f):
+        if f == self.zero() and not issubclass(type(self._R), Polynomial):
+            return [0]
+        elif f == self.zero():
+            l = self._R.multidegree(self._R.zero())
+            return l.append(0)
+        else:
+            lis = self.generate_tuple_representation(f)
+            if self._order is not None:
+                lis = self._order(lis)
+            c, l = lis[-1]
+            return l
+
+    def multivariable_division(self, f, lf):
+        return multivariable_division(f, lf, self)

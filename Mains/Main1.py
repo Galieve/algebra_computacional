@@ -1,9 +1,6 @@
 from Structures.Integers import Integers
-
 from Structures.GaussianIntegers import GaussianIntegers
-
 from Structures.FiniteFieldsWrapper import FiniteFieldsWrapper
-
 from Structures.Polynomial import Polynomial
 
 i = Integers()

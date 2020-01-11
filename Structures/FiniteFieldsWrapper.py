@@ -1,21 +1,21 @@
-from sage.rings.finite_rings.finite_field_constructor import GF
+import sage.rings.finite_rings.finite_field_constructor
 
 from Structures.Field import Field
 
 
 class FiniteFieldsWrapper(Field):
 
-    galoisField = None
+    _galoisField = None
 
-    p = None
+    _p = None
 
-    k = None
+    _k = None
 
     def __init__(self, p, k, var):
         super(FiniteFieldsWrapper, self).__init__()
-        self.p = p
-        self.k = k
-        self.galoisField = GF(p**k, name = var)
+        self._p = p
+        self._k = k
+        self._galoisField = sage.rings.finite_rings.finite_field_constructor.GF(p ** k, name = var)
 
     def inverse(self, a):
         return a.inverse()
@@ -44,14 +44,14 @@ class FiniteFieldsWrapper(Field):
         return super(FiniteFieldsWrapper, self).normal(a)
 
     def get_variable(self):
-        return self.galoisField.gen()
+        return self._galoisField.gen()
 
     def get_true_value(self):
         # return GF(self.p**self.module.degree(),name = self.var)
-        return self.galoisField
+        return self._galoisField
 
     def get_order(self):
-        return self.p**self.k
+        return self._p ** self._k
 
     def get_random(self, inf = None, sup = None):
-        return self.galoisField.random_element()
+        return self._galoisField.random_element()

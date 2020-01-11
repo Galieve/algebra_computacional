@@ -1,9 +1,7 @@
 from sage.all import *
-from Algorithms.MathAuxiliar import eratostenes, factor, get_divisors
+from Algorithms.MathAuxiliar import get_divisors
 from Structures.FiniteFieldsWrapper import FiniteFieldsWrapper
 from Structures.Polynomial import Polynomial
-
-from Structures.FiniteFields import FiniteFields
 
 K = FiniteFieldsWrapper(3, 5, 'a')
 a = K.get_variable()

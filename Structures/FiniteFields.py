@@ -8,39 +8,39 @@ from Structures.IntegersModuleP import IntegersModuleP
 class FiniteFields(Field):
     # galoisField = None
 
-    module = None
+    _module = None
 
-    var = None
+    _var = None
 
-    Poly_ring = None
+    _Poly_ring = None
 
-    p = None
+    _p = None
 
-    k = None
+    _k = None
 
     def __init__(self, p, k, var, poly):
         super(FiniteFields, self).__init__()
         assert (k == poly.degree())
-        self.module = poly
-        self.p = p
-        self.k = k
-        self.Poly_ring = Polynomial(IntegersModuleP(p), var)
-        self.var = self.Poly_ring.get_true_value().gen()
+        self._module = poly
+        self._p = p
+        self._k = k
+        self._Poly_ring = Polynomial(IntegersModuleP(p), var)
+        self._var = self._Poly_ring.get_true_value().gen()
 
     def __init__(self, p, k, var):
         super(FiniteFields, self).__init__()
-        self.Poly_ring = Polynomial(IntegersModuleP(p), var)
-        self.module = GF(p ** k, name=var).modulus();
-        self.k = k
-        self.module = self.module.change_ring(IntegersModuleP(p).get_true_value());
-        self.module = self.module.change_variable_name(var)
+        self._Poly_ring = Polynomial(IntegersModuleP(p), var)
+        self._module = GF(p ** k, name=var).modulus();
+        self._k = k
+        self._module = self._module.change_ring(IntegersModuleP(p).get_true_value());
+        self._module = self._module.change_variable_name(var)
 
-        self.p = p
-        self.var = self.Poly_ring.get_variable()
+        self._p = p
+        self._var = self._Poly_ring.get_variable()
 
     def inverse(self, a):
-        gcd, coeff, _ = self.Poly_ring.extended_euclides(a, self.module())
-        return self.Poly_ring.mod(coeff, self.module())
+        gcd, coeff, _ = self._Poly_ring.extended_euclides(a, self._module())
+        return self._Poly_ring.mod(coeff, self._module())
 
     def one(self):
         return 1 + 0 * self.get_variable()
@@ -50,33 +50,33 @@ class FiniteFields(Field):
         return 0 + 0 * self.get_variable()
 
     def add(self, a, b):
-        return self.Poly_ring.mod(self.Poly_ring.add(a, b), self.module)
+        return self._Poly_ring.mod(self._Poly_ring.add(a, b), self._module)
 
     def mul(self, a, b):
-        return self.Poly_ring.mod(self.Poly_ring.mul(a, b), self.module)
+        return self._Poly_ring.mod(self._Poly_ring.mul(a, b), self._module)
 
         # a // b == a * b^-1, en cuerpos b^-1 siempre existe.
     def quo_rem(self, a, b):
         return self.mul(a, self.inverse(b)), self.zero()
 
     def opposite(self, a):
-        return self.Poly_ring.mod(self.Poly_ring.opposite(a), self.module)
+        return self._Poly_ring.mod(self._Poly_ring.opposite(a), self._module)
 
     def normal(self, a):
-        return super(FiniteFields, self).normal(self.Poly_ring.mod(a, self.module))
+        return super(FiniteFields, self).normal(self._Poly_ring.mod(a, self._module))
 
     def get_variable(self):
-        return self.var
+        return self._var
 
     def get_true_value(self):
         # return GF(self.p**self.module.degree(),name = self.var)
-        return self.Poly_ring.get_true_value()
+        return self._Poly_ring.get_true_value()
 
     def get_order(self):
-        return self.p**self.k
+        return self._p ** self._k
 
     def get_char(self):
-        return self.p
+        return self._p
 
     def get_random(self, inf=None, sup=None):
         return self.get_true_value().random_element(inf, sup)

@@ -1,5 +1,3 @@
-from sage.all import *
-
 import Structures.Integers
 import Structures.GaussianIntegers
 

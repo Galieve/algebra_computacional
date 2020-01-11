@@ -1,8 +1,6 @@
-import sage.all
 import Structures.Integers
-import Structures.Polynomial
 import Structures.IntegersModuleP
-from Algorithms.HenselLifting import hensel_step, multifactor_hensel_lifting
+import Structures.Polynomial
 
 Z = Structures.Integers.Integers()
 R = Structures.Polynomial.Polynomial(Z, 'y')

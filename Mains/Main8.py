@@ -1,13 +1,11 @@
 from sage.all import *
-from Algorithms.MathAuxiliar import eratostenes, factor, get_divisors
-from Structures.FiniteFieldsWrapper import FiniteFieldsWrapper
-from Structures.Polynomial import Polynomial
+import Structures.FiniteFieldsWrapper
+import Structures.Polynomial
 
-from Structures.FiniteFields import FiniteFields
 
-K = FiniteFieldsWrapper(3, 5, 'a')
+K = Structures.FiniteFieldsWrapper.FiniteFieldsWrapper(3, 5, 'a')
 a = K.get_variable()
-R = Polynomial(K, 'x')
+R = Structures.Polynomial.Polynomial(K, 'x')
 x = R.get_variable()
 f = x ** 3 - x + 1
 g = x ** 2 - x - 1

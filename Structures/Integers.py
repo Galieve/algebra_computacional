@@ -40,7 +40,10 @@ class Integers(Ring.Ring):
         return ZZ
 
     def get_random(self, inf = None, sup = None):
-        return ZZ.random_element(inf, sup + 1)
+        if sup is not None:
+            return ZZ.random_element(inf, sup + 1)
+        else:
+            return ZZ.random_element(inf, sup)
 
     def miller_rabin(self, n, k):
         return miller_rabin(n, k)
