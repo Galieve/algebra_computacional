@@ -3,6 +3,7 @@ from sage.rings.polynomial.polynomial_ring_constructor import PolynomialRing
 from Algorithms.Berlekamp import berlekamp_full
 from Algorithms.FiniteFieldFactorization import sfd, distinct_degree_decomposition, \
     equal_degree_full_splitting
+from Algorithms.HenselLifting import hensel_full_lifting
 from Algorithms.Kronecker import full_kronecker
 from Algorithms.IrreducibilityTest import is_irreducible
 from Algorithms.Primitive import primitive_euclidean
@@ -137,5 +138,28 @@ class Polynomial(Ring):
         if f == self.zero(): return 0
         return len(f.list()) - 1
 
+    # no apto para polinomios de varias variables
+    def max_norm(self, f):
+        fl = f.list()
+        if len(fl) == 0:
+            return 0
+        maxn = abs(f[0])
+        for i in fl:
+            maxn = max(abs(i), maxn)
+        return maxn
+
+    # no apto para polinomios de varias variables
+    def one_norm(self, f):
+        if f == self.zero():
+            return 0
+        flist = f.list()
+        on = abs(flist[0])
+        for i in range(1, len(flist)):
+            on = self.R.add(abs(flist[i]), on)
+        return on
+
     def kronecker(self, f):
         return full_kronecker(f, self)
+
+    def hensel_lifting(self, f):
+        return hensel_full_lifting(f, self)

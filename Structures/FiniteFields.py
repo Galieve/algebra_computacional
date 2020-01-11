@@ -77,3 +77,6 @@ class FiniteFields(Field):
 
     def get_char(self):
         return self.p
+
+    def get_random(self, inf=None, sup=None):
+        return self.get_true_value().random_element(inf, sup)

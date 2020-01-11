@@ -84,3 +84,6 @@ class Ring:
 
     def repeated_squaring(self,a, n):
         return Algorithms.IrreducibilityTest.repeated_squaring(a, n, self)
+
+    def get_random(self, inf=None, sup=None):
+        return self.zero()

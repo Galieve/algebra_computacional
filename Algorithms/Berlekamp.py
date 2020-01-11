@@ -11,7 +11,6 @@ def berlekamp1_3(f, R):
     xq = QF.repeated_squaring(x, q)
 
     # paso 2
-    fl = f.list()
     Q = []
     acum = R.one()
     for i in range(0, n):
@@ -81,7 +80,7 @@ def berlekamp_k_times(f, R, k):
 def berlekamp_full(f, R, k):
     g = berlekamp_k_times(f, R, k)
     if g is None:
-        return None
+        return [f]
     elif g == f:
         return [f]
     gl = berlekamp_full(g, R, k)

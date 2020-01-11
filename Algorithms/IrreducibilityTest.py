@@ -4,6 +4,8 @@ from sage.functions.other import sqrt, ceil
 from MathAuxiliar import to_binary, factor
 
 def repeated_squaring(a, n, R):
+    if n == 0:
+        return R.one()
     l = to_binary(n)
     k = len(l) - 1
     b = [R.zero()] * (k + 1)

@@ -1,5 +1,6 @@
 from sage.all import ZZ
 import Ring
+from Algorithms.MillerRabin import miller_rabin
 
 
 class Integers(Ring.Ring):
@@ -38,5 +39,8 @@ class Integers(Ring.Ring):
     def get_true_value(self):
         return ZZ
 
-    def get_random(self, sup = None):
-        return ZZ.random_element(sup + 1)
+    def get_random(self, inf = None, sup = None):
+        return ZZ.random_element(inf, sup + 1)
+
+    def miller_rabin(self, n, k):
+        return miller_rabin(n, k)
