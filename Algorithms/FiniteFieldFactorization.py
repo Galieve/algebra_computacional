@@ -78,5 +78,8 @@ def equal_degree_full_splitting(f, d, R, k):
         return None
     l1 = equal_degree_full_splitting(g, d, R, k)
     l2 = equal_degree_full_splitting(R.quo(f, g), d, R, k)
-    l1.extend(l2)
+    if l1 is not None and l2 is not None:
+        l1.extend(l2)
+    elif l2 is not None:
+        l1 = l2
     return l1
