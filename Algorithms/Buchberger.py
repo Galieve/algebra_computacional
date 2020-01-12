@@ -8,7 +8,7 @@ def s_polynomial(g, h, R):
     n = len(mdegg)
     for i in range(0, n):
         gamma.append(max(mdegg[i], mdegh[i]))
-    xgamma = R.generate_monomial((1, gamma))
+    xgamma = R.generate_monomial((R.get_bottom_domain().one(), gamma))
     s = R.quo(R.mul(xgamma, g), ltg)
     s = R.sub(s, R.quo(R.mul(xgamma, h), lth))
     return s
