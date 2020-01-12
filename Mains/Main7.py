@@ -1,11 +1,11 @@
 from sage.all import *
 from Algorithms.MathAuxiliar import get_divisors
-from Structures.FiniteFieldsWrapper import FiniteFieldsWrapper
-from Structures.Polynomial import Polynomial
+import Structures.FiniteFieldsWrapper
+import Structures.FiniteFieldPolynomial
 
-K = FiniteFieldsWrapper(3, 5, 'a')
+K = Structures.FiniteFieldsWrapper.FiniteFieldsWrapper(3, 5, 'a')
 a = K.get_variable()
-R = Polynomial(K, 'x')
+R = Structures.FiniteFieldPolynomial.FiniteFieldPolynomial(K, 'x')
 x = R.get_variable()
 f = x ** 3 - x + 1
 g = x ** 2 - x - 1
@@ -24,21 +24,20 @@ lk = R.square_free_decomposition(k)
 print(k, lk)
 print("")
 print("Distinct degree decomposition:")
-print("i")
 ddi = []
 for p, m in li:
     ddi.append((R.distinct_degree_decomposition(p), m))
-print(ddi)
-print("j")
+print "i: ", ddi
+
 ddj = []
 for p, m in lj:
     ddj.append((R.distinct_degree_decomposition(p), m))
-print(ddj)
+print "j: ", ddj
 
 ddk = []
 for p, m in lk:
     ddk.append((R.distinct_degree_decomposition(p), m))
-print "k", ddk
+print "k: ", ddk
 print("")
 print("Equal degree decomposition:")
 

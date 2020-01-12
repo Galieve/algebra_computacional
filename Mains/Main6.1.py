@@ -29,6 +29,8 @@ for beta in range(2,83):
             print beta, "**", lg, "=", alpha, "y al operar vemos que es:",\
                 K.repeated_squaring(beta, lg) == alpha
 
+print ""
+
 print "Finite Field F5"
 K = Structures.FiniteFields.FiniteFields(5, 1, 'a')
 a = K.get_variable()

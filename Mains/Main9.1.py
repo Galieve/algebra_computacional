@@ -1,8 +1,8 @@
 import Structures.Integers
-import Structures.Polynomial
+import Structures.IntegerPolynomial
 
 Z = Structures.Integers.Integers()
-R = Structures.Polynomial.Polynomial(Z, 'x')
+R = Structures.IntegerPolynomial.IntegerPolynomial(Z, 'x')
 x = R.get_variable()
 
 f = x ** 3 - x + 1

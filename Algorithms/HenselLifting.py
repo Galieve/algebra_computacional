@@ -8,6 +8,12 @@ from Algorithms.AKS import AKS
 from Algorithms.MathAuxiliar import factor
 
 import itertools
+
+def squarefree_charzero(f, R):
+    f_ = R.derivate(f)
+    u = R.gcd(f, f_)
+    return R.quo(f, u)
+
 def findsubsets(S,m):
     return list(map(set, itertools.combinations(S, m)))
 
@@ -166,9 +172,10 @@ def multifactor_hensel_lifting(p, lc, hlist, RP, f, R, l):
 
 def hensel_lifting(f, R):
     import Structures.FiniteFieldsWrapper
-    import Structures.Polynomial
+    import Structures.FiniteFieldPolynomial
     import Structures.Integers
     import Structures.IntegersModuleP
+    import Structures.Polynomial
 
     # paso 1
     n = R.degree(f)
@@ -193,14 +200,14 @@ def hensel_lifting(f, R):
     limsup = int(ceil(2 * gamma * log(gamma)))
     p = find_prime(list_lc, limsup)
     FP = Structures.FiniteFieldsWrapper.FiniteFieldsWrapper(p, 1, 'a')
-    RP = Structures.Polynomial.Polynomial(FP, 'x')
+    RP = Structures.FiniteFieldPolynomial.FiniteFieldPolynomial(FP, 'x')
     fmod = RP.get_true_value()(f.list())
     fder = RP.derivate(fmod)
 
     while RP.gcd(fmod, fder) != RP.one() or p == 2:
         p = find_prime(list_lc, limsup)
         FP = Structures.FiniteFieldsWrapper.FiniteFieldsWrapper(p, 1, 'a')
-        RP = Structures.Polynomial.Polynomial(FP, 'x')
+        RP = Structures.FiniteFieldPolynomial.FiniteFieldPolynomial(FP, 'x')
         fmod = RP.get_true_value()(f.list())
         fder = RP.derivate(fmod)
 

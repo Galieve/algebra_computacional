@@ -1,13 +1,6 @@
 from sage.rings.polynomial.polynomial_ring_constructor import PolynomialRing
 
-from Algorithms.Berlekamp import berlekamp_full
-from Algorithms.Buchberger import buchberger_algorithm
-from Algorithms.FiniteFieldFactorization import sfd, distinct_degree_decomposition, \
-    equal_degree_full_splitting
-from Algorithms.HenselLifting import hensel_full_lifting
-from Algorithms.Kronecker import full_kronecker
 from Algorithms.IrreducibilityTest import is_irreducible
-from Algorithms.MultivariateDivision import multivariate_division
 from Algorithms.Primitive import primitive_euclidean
 from Algorithms.SortPolynomials import sort_polynomials, lexicografic_mon
 from Structures import Field
@@ -46,10 +39,11 @@ class Polynomial(Ring):
     def opposite(self, a):
         return -a
 
+    def get_order(self):
+        return self.get_domain().get_order()
+
     # normal(a) == a si el leading_coefficient de a es > 0, sino es -a
     # cuidao!
-
-
     def normal(self, a):
         if a == self.zero():
             return a
@@ -181,39 +175,19 @@ class Polynomial(Ring):
     def _finite_field_is_irreducible_(self, f):
         return is_irreducible(f, self)
 
-    # solo para polinomios en una variable en cuerpos finitos con el orden por defecto.
-    def pth_root(self, f, p):
-        lf = f.list()
-        l = []
-        for i in range(0, len(lf), p):
-            l.append(lf[i])
-        return self._P(l)
-
-    def derivate(self, f):
-        lf = f.list()
-        l = []
-        for i in range(1, len(lf)):
-            l.append(lf[i] * i)
-        return self._P(l)
-
-    def square_free_decomposition(self, f):
-        f = self.normal(f)
-        return sfd(f, self)
-
-    def distinct_degree_decomposition(self, f):
-        return distinct_degree_decomposition(f, self)
-
     def random_element_lim(self, a, b):
         return self._P.random_element(degree=(a, b))
 
     def random_element(self, n):
         return self._P.random_element(degree=(0, n))
 
-    def equal_degree_splitting(self, f, d, k):
-        return equal_degree_full_splitting(f, d, self, k)
-
-    def berlekamp(self, f, k):
-        return berlekamp_full(f, self, k)
+    # solo con respecto a la variable mas externa
+    def derivate(self, f):
+        lf = f.list()
+        l = []
+        for i in range(1, len(lf)):
+            l.append(self._R.mul(lf[i], i))
+        return self._P(l)
 
     def evaluate(self, f, a):
         if f == self.zero():
@@ -248,9 +222,3 @@ class Polynomial(Ring):
         for i in range(1, len(flist)):
             on = self._R.add(abs(flist[i]), on)
         return on
-
-    def kronecker(self, f):
-        return full_kronecker(f, self)
-
-    def hensel_lifting(self, f):
-        return hensel_full_lifting(f, self)

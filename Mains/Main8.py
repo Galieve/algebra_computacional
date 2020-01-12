@@ -1,11 +1,11 @@
 from sage.all import *
 import Structures.FiniteFieldsWrapper
-import Structures.Polynomial
+import Structures.FiniteFieldPolynomial
 
 
 K = Structures.FiniteFieldsWrapper.FiniteFieldsWrapper(3, 5, 'a')
 a = K.get_variable()
-R = Structures.Polynomial.Polynomial(K, 'x')
+R = Structures.FiniteFieldPolynomial.FiniteFieldPolynomial(K, 'x')
 x = R.get_variable()
 f = x ** 3 - x + 1
 g = x ** 2 - x - 1

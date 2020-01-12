@@ -15,10 +15,6 @@ class Field(Ring):
         else:
             return self.one()
 
-    @abstractmethod
-    def get_order(self):
-        pass
-
     def discrete_logarithm(self, a, b):
         return discrete_logarithm(a, b, self)
 

@@ -51,6 +51,9 @@ class Ring:
     def normal(self, a):
         pass
 
+    def get_order(self):
+        return 0
+
     def unit_normal(self, a):
         if a == self.zero():
             return self.one()
