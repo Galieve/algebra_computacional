@@ -97,6 +97,84 @@ class Polynomial(Ring):
     def get_domain(self):
         return self._R
 
+    def lt(self, f):
+        if f == self.zero():
+            return f
+        elif self._order is None:
+            fl = f.list()
+            if issubclass(type(self._R), Polynomial):
+                l = self._R.lt(fl[-1])
+            else:
+                l = fl[-1]
+            l = self.mul(l, self.repeated_squaring(self.get_variable(), len(fl) - 1))
+            return l
+        else:
+            ls = self.generate_tuple_representation(f)
+            ls.sort(cmp=self._order)
+            return self.generate_monomial(ls[-1])
+
+    def generate_monomial(self, (c, l)):
+        if issubclass(type(self._R), Polynomial):
+            sol = self._R.generate_monomial((c, l[1:]))
+        else:
+            sol = c
+        x = self.get_variable()
+        xn = self.repeated_squaring(x, l[0])
+        sol = self.mul(sol, xn)
+        return sol
+
+    def generate_tuple_representation(self, f):
+        l = self._generate_tuple_representation_(f)
+        l_ = []
+        for c, le in l:
+            l_.append((c, list(le)))
+        return l_
+
+    def _generate_tuple_representation_(self, f):
+        import collections
+        fl = f.list()
+        l = []
+        for i in range(0, len(fl)):
+            if fl[i] == self._R.zero():
+                continue
+            elif issubclass(type(self._R), Polynomial):
+                ls = self._R._generate_tuple_representation_(fl[i])
+                for e, le in ls:
+                    le.appendleft(i)
+                    l.append((e, le))
+            else:
+                l.append((fl[i], collections.deque([i])))
+        return l
+
+    def generate_polynomial(self, l):
+        f = self.zero()
+        for i in l:
+            f = self.add(f, self.generate_monomial(i))
+        return f
+
+    def sort_polynomials(self, lpoly, reverse=False):
+        lp = []
+        for i in lpoly:
+            lp.append(self.generate_tuple_representation(i))
+        lp.sort(cmp=lambda a, b: sort_polynomials(a, b, self._order), reverse=reverse)
+        lsol = []
+        for i in lp:
+            lsol.append(self.generate_polynomial(i))
+        return lsol
+
+    def multidegree(self, f):
+        if f == self.zero() and not issubclass(type(self._R), Polynomial):
+            return [0]
+        elif f == self.zero():
+            l = self._R.multidegree(self._R.zero())
+            return l.append(0)
+        else:
+            lis = self.generate_tuple_representation(f)
+            if self._order is not None:
+                lis.sort(cmp=self._order)
+            c, l = lis[-1]
+            return l
+
     def is_irreducible(self, f):
         return self._finite_field_is_irreducible_(f)
 
@@ -176,88 +254,3 @@ class Polynomial(Ring):
 
     def hensel_lifting(self, f):
         return hensel_full_lifting(f, self)
-
-    def lt(self, f):
-        if f == self.zero():
-            return f
-        elif self._order is None:
-            fl = f.list()
-            if issubclass(type(self._R), Polynomial):
-                l = self._R.lt(fl[-1])
-            else:
-                l = fl[-1]
-            l = self.mul(l, self.repeated_squaring(self.get_variable(), len(fl) - 1))
-            return l
-        else:
-            ls = self.generate_tuple_representation(f)
-            ls.sort(cmp=self._order)
-            return self.generate_monomial(ls[-1])
-
-    def generate_monomial(self, (c, l)):
-        if issubclass(type(self._R), Polynomial):
-            sol = self._R.generate_monomial((c, l[1:]))
-        else:
-            sol = c
-        x = self.get_variable()
-        xn = self.repeated_squaring(x, l[0])
-        sol = self.mul(sol, xn)
-        return sol
-
-    def generate_tuple_representation(self, f):
-        l = self._generate_tuple_representation_(f)
-        l_ = []
-        for c, le in l:
-            l_.append((c, list(le)))
-        return l_
-
-    def _generate_tuple_representation_(self, f):
-        import collections
-        fl = f.list()
-        l = []
-        for i in range(0, len(fl)):
-            if fl[i] == self._R.zero():
-                continue
-            elif issubclass(type(self._R), Polynomial):
-                ls = self._R._generate_tuple_representation_(fl[i])
-                for e, le in ls:
-                    le.appendleft(i)
-                    l.append((e, le))
-            else:
-                l.append((fl[i], collections.deque([i])))
-        return l
-
-    def generate_polynomial(self, l):
-        f = self.zero()
-        for i in l:
-            f = self.add(f, self.generate_monomial(i))
-        return f
-
-    def sort_polynomials(self, lpoly, reverse=False):
-        lp = []
-        for i in lpoly:
-            lp.append(self.generate_tuple_representation(i))
-        lp.sort(cmp=lambda a, b: sort_polynomials(a, b, self._order), reverse=reverse)
-        lsol = []
-        for i in lp:
-            lsol.append(self.generate_polynomial(i))
-        return lsol
-
-    def multidegree(self, f):
-        if f == self.zero() and not issubclass(type(self._R), Polynomial):
-            return [0]
-        elif f == self.zero():
-            l = self._R.multidegree(self._R.zero())
-            return l.append(0)
-        else:
-            lis = self.generate_tuple_representation(f)
-            if self._order is not None:
-                lis.sort(cmp=self._order)
-            c, l = lis[-1]
-            return l
-
-    def multivariate_division(self, f, lf):
-        return multivariate_division(f, lf, self)
-
-    def buchberger_algorithm(self, lp):
-        return buchberger_algorithm(lp, self)
-
