@@ -32,3 +32,42 @@ def buchberger_algorithm(lfi, R):
         else:
             G.extend(S)
             G = list(set(G))
+
+def ideal_membership_testing(f, base, R):
+    q, r = R.multivariate_division(f, base)
+    return r == R.zero()
+
+
+def minimal_buchberger_algorithm(lfi, R):
+    base = buchberger_algorithm(lfi, R)
+
+
+    sol = list(base)
+    for i in range(0, len(base)):
+        g = base[i]
+        ltg = R.lt(g)
+        bc = list(sol)
+        bc.remove(g)
+        lgbase = []
+        for i in bc:
+            lgbase.append(R.lt(i))
+        lgbase = buchberger_algorithm(lgbase, R)
+        if ideal_membership_testing(ltg, lgbase, R):
+            sol = bc
+    sol_ = []
+    for i in sol:
+        sol_.append(R.mul(R.get_bottom_domain().inverse(R.lc(i)), i))
+    return sol_
+
+def minimal_reduced_buchberger_algorithm(lfi, R):
+    mba = minimal_buchberger_algorithm(lfi, R)
+    answ = []
+    n = len(mba)
+    for i in range(0, n):
+        ideal_base = answ[0:i]
+        ideal_base.extend(mba[i+1:n])
+        q, r = R.multivariate_division(mba[i], ideal_base)
+        answ.append(r)
+    return answ
+
+

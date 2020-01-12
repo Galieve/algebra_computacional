@@ -91,6 +91,12 @@ class Polynomial(Ring):
     def get_domain(self):
         return self._R
 
+    def get_bottom_domain(self):
+        if issubclass(type(self._R), Polynomial):
+            return self._R.get_bottom_domain()
+        else:
+            return self._R
+
     def lt(self, f):
         if f == self.zero():
             return f
@@ -106,6 +112,20 @@ class Polynomial(Ring):
             ls = self.generate_tuple_representation(f)
             ls.sort(cmp=self._order)
             return self.generate_monomial(ls[-1])
+
+    def lc(self, f):
+        if f == self.zero():
+            return f
+        lt = self.lt(f)
+        return self._lc_(lt)
+
+    def _lc_(self, lt):
+        if issubclass(type(self._R), Polynomial):
+            l = lt.list()
+            return self._R._lc_(l[-1])
+        else:
+            l = lt.list()
+            return l[-1]
 
     def generate_monomial(self, (c, l)):
         if issubclass(type(self._R), Polynomial):
