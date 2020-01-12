@@ -1,4 +1,4 @@
-def multivariable_division(f, lfi, R):
+def multivariate_division(f, lfi, R):
     # paso 1
     r = R.zero()
     p = f

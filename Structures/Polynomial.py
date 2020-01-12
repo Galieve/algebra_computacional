@@ -1,13 +1,15 @@
 from sage.rings.polynomial.polynomial_ring_constructor import PolynomialRing
 
 from Algorithms.Berlekamp import berlekamp_full
+from Algorithms.Buchberger import buchberger_algorithm
 from Algorithms.FiniteFieldFactorization import sfd, distinct_degree_decomposition, \
     equal_degree_full_splitting
 from Algorithms.HenselLifting import hensel_full_lifting
 from Algorithms.Kronecker import full_kronecker
 from Algorithms.IrreducibilityTest import is_irreducible
-from Algorithms.MultivariableDivision import multivariable_division
-from Algorithms.Primitive import primitive_euclidean, primitive_reminder
+from Algorithms.MultivariateDivision import multivariate_division
+from Algorithms.Primitive import primitive_euclidean
+from Algorithms.SortPolynomials import sort_polynomials, lexicografic_mon
 from Structures import Field
 from Structures.Ring import Ring
 
@@ -20,7 +22,7 @@ class Polynomial(Ring):
 
     _order = None
 
-    def __init__(self, F, var, order=None):
+    def __init__(self, F, var, order=lexicografic_mon):
         super(Polynomial, self).__init__()
         self._R = F
         self._P = PolynomialRing(F.get_true_value(), name=var)
@@ -188,7 +190,7 @@ class Polynomial(Ring):
             return l
         else:
             ls = self.generate_tuple_representation(f)
-            ls = self._order(ls)
+            ls.sort(cmp=self._order)
             return self.generate_monomial(ls[-1])
 
     def generate_monomial(self, (c, l)):
@@ -224,6 +226,22 @@ class Polynomial(Ring):
                 l.append((fl[i], collections.deque([i])))
         return l
 
+    def generate_polynomial(self, l):
+        f = self.zero()
+        for i in l:
+            f = self.add(f, self.generate_monomial(i))
+        return f
+
+    def sort_polynomials(self, lpoly, reverse=False):
+        lp = []
+        for i in lpoly:
+            lp.append(self.generate_tuple_representation(i))
+        lp.sort(cmp=lambda a, b: sort_polynomials(a, b, self._order), reverse=reverse)
+        lsol = []
+        for i in lp:
+            lsol.append(self.generate_polynomial(i))
+        return lsol
+
     def multidegree(self, f):
         if f == self.zero() and not issubclass(type(self._R), Polynomial):
             return [0]
@@ -233,9 +251,13 @@ class Polynomial(Ring):
         else:
             lis = self.generate_tuple_representation(f)
             if self._order is not None:
-                lis = self._order(lis)
+                lis.sort(cmp=self._order)
             c, l = lis[-1]
             return l
 
-    def multivariable_division(self, f, lf):
-        return multivariable_division(f, lf, self)
+    def multivariate_division(self, f, lf):
+        return multivariate_division(f, lf, self)
+
+    def buchberger_algorithm(self, lp):
+        return buchberger_algorithm(lp, self)
+

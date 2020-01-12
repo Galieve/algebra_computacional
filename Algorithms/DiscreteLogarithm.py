@@ -28,7 +28,7 @@ def discrete_logarithm_n(alpha, beta, R, n):
         if x == x_:
             r = IMP.sub(b_, b)
             s = IMP.sub(a, a_)
-            if r == IMP.zero() or Z.gcd(s, n) != Z.one():
+            if Z.gcd(s, n) != Z.one():
                 return None
             else:
                 return IMP.mul(IMP.inverse(s), r)
