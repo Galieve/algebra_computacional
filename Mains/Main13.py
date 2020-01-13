@@ -9,7 +9,7 @@ S = Structures.FieldPolynomial.FieldPolynomial(R, 'x', graded_lexicografic_mon)
 y = R.get_variable()
 x = S.get_variable()
 lp = [x**3 - 2*x*y, x**2*y - 2*y**2 + x]
-print "la base de Grobner es:", S.buchberger_algorithm(lp), "y la reducida es:", S.minimal_reduced_buchberger_algorithm(lp)
+print "Una base de Grobner es:", S.buchberger_algorithm(lp), "y la reducida es:", S.minimal_reduced_buchberger_algorithm(lp)
 
 Q = Structures.Rationals.Rationals()
 R = Structures.FieldPolynomial.FieldPolynomial(Q, 'y')
@@ -21,7 +21,7 @@ x = S.get_variable()
 v = T.get_variable()
 u = U.get_variable()
 lp = [u*y - v*x - v, u*y - v*x + 2*v - y]
-print "la base de Grobner es:", U.buchberger_algorithm(lp), "y la reducida es:", U.minimal_reduced_buchberger_algorithm(lp)
+print "Una base de Grobner es:", U.buchberger_algorithm(lp), "y la reducida es:", U.minimal_reduced_buchberger_algorithm(lp)
 
 
 Q = Structures.Rationals.Rationals()
@@ -34,7 +34,7 @@ y = S.get_variable()
 z = T.get_variable()
 t = U.get_variable()
 lp = [x - t, y - t**2, z - t**3]
-print "la base de Grobner es:", U.buchberger_algorithm(lp), "y la reducida es:", U.minimal_reduced_buchberger_algorithm(lp)
+print "Una base de Grobner es:", U.buchberger_algorithm(lp), "y la reducida es:", U.minimal_reduced_buchberger_algorithm(lp)
 
 
 Q = Structures.Rationals.Rationals()
@@ -47,4 +47,4 @@ y = S.get_variable()
 z = T.get_variable()
 t = U.get_variable()
 lp = [x - t**2, y - t**3, z - t**4]
-print "la base de Grobner es:", U.buchberger_algorithm(lp), "y la reducida es:", U.minimal_reduced_buchberger_algorithm(lp)
+print "Una base de Grobner es:", U.buchberger_algorithm(lp), "y la reducida es:", U.minimal_reduced_buchberger_algorithm(lp)

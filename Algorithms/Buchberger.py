@@ -65,7 +65,8 @@ def minimal_buchberger_algorithm(lfi, R):
         lgbase = []
         for i in bc:
             lgbase.append(R.lt(i))
-        lgbase = buchberger_algorithm(lgbase, R)
+
+        # lg(G\{g}) es base de Grobner de <lg(G\{g})>
 
         # paso 4
         if ideal_membership_testing(ltg, lgbase, R):

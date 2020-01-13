@@ -1,7 +1,11 @@
 # S3 == 0, S1 == 2, S2 == 1
 def new_xab(alpha, beta, x, a, b, R, IMP):
-    xl = x.list()
-    x0 = xl[0].lift()
+    import Structures.QuotientFiniteField
+    if issubclass(type(R), Structures.QuotientFiniteField.QuotientFiniteField):
+        x0 = R.get_domain().lc(x).integer_representation()
+    else:
+        xl = x.list()
+        x0 = xl[0].lift()
     if x0 % 3 == 0:
         return R.mul(x, x), IMP.mul(2, a), IMP.mul(2, b)
     elif x0 % 3 == 1:

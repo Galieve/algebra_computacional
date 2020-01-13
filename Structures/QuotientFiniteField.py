@@ -44,3 +44,6 @@ class QuotientFiniteField(Field.Field):
 
     def get_order(self):
         return self._R.get_domain().get_order() ** self._f.degree()
+
+    def get_domain(self):
+        return self._R
