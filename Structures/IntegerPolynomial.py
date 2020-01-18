@@ -22,3 +22,16 @@ class IntegerPolynomial(Structures.Polynomial.Polynomial):
     def square_free_part(self, f):
         assert self.get_order() == 0
         return squarefree_charzero(f, self)
+
+    def symmetric_module(self, a, pl):
+        import IntegersModuleP
+        IMP = IntegersModuleP.IntegersModuleP(pl)
+        al = self.generate_tuple_representation(a)
+        l = []
+        plm = pl // 2
+        for m, col in al:
+            mc = IMP.canonical(m)
+            if mc > plm:
+                mc = mc - pl
+            l.append((mc, col))
+        return self.generate_polynomial(l)

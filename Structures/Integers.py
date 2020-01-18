@@ -1,5 +1,6 @@
 from sage.all import ZZ
 import Ring
+from Algorithms.AKS import AKS
 from Algorithms.MillerRabin import miller_rabin
 
 
@@ -47,3 +48,6 @@ class Integers(Ring.Ring):
 
     def miller_rabin(self, n, k):
         return miller_rabin(n, k)
+
+    def aks(self, a):
+        return AKS(a)

@@ -1,6 +1,8 @@
-from Algorithms.AKS import AKS
+import Structures.Integers
+
+Z = Structures.Integers.Integers()
 
 for i in range(2, 100):
-    print i, AKS(i)
+    print i, Z.aks(i)
 
 

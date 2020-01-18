@@ -2,7 +2,7 @@
 def new_xab(alpha, beta, x, a, b, R, IMP):
     import Structures.QuotientFiniteField
     if issubclass(type(R), Structures.QuotientFiniteField.QuotientFiniteField):
-        x0 = R.get_domain().lc(x).integer_representation()
+        x0 = R.get_domain().recursive_lc(x).integer_representation()
     else:
         xl = x.list()
         x0 = xl[0].lift()

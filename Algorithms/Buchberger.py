@@ -75,7 +75,7 @@ def minimal_buchberger_algorithm(lfi, R):
     # paso 5
     sol_ = []
     for i in sol:
-        sol_.append(R.mul(R.get_bottom_domain().inverse(R.lc(i)), i))
+        sol_.append(R.mul(R.get_bottom_domain().inverse(R.recursive_lc(i)), i))
 
     # paso 6
     return sol_

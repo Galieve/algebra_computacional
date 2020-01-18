@@ -8,18 +8,23 @@ from Structures.Ring import Ring
 
 
 class Polynomial(Ring):
-
     _R = None
 
     _P = None
 
     _order = None
 
+    _num_variables = None
+
     def __init__(self, F, var, order=lexicografic_mon):
         super(Polynomial, self).__init__()
         self._R = F
         self._P = PolynomialRing(F.get_true_value(), name=var)
         self._order = order
+        if issubclass(type(F), Polynomial):
+            self._num_variables = F._num_variables + 1
+        else:
+            self._num_variables = 1
 
     def one(self):
         return 1 + 0 * self.get_variable()
@@ -52,7 +57,6 @@ class Polynomial(Ring):
         n = self._R.normal(lt_)
         pos = self._R.quo(n, lt_)
         return pos * a
-
 
     def cont(self, f):
         l = [k for v, k in f.dict().items()]
@@ -97,6 +101,9 @@ class Polynomial(Ring):
         else:
             return self._R
 
+    def number_of_variables(self):
+        return self._num_variables
+
     def lt(self, f):
         if f == self.zero():
             return f
@@ -113,16 +120,26 @@ class Polynomial(Ring):
             ls.sort(cmp=self._order)
             return self.generate_monomial(ls[-1])
 
+    # Si f \in F[x1, ..., xn], f = a0*x**alpha0 + ..., con alpha0 vector
+    # entonces deep_lc(f) = an, con n el mayor de ellos xD
+    def recursive_lc(self, f):
+        if f == self.zero():
+            return f
+        lt = self.lt(f)
+        return self._recursive_lc_(lt)
+
+    # El lc de un polinomio multivariable esta en una dimension menor
     def lc(self, f):
         if f == self.zero():
             return f
         lt = self.lt(f)
-        return self._lc_(lt)
+        l = lt.list()
+        return l[-1]
 
-    def _lc_(self, lt):
+    def _recursive_lc_(self, lt):
         if issubclass(type(self._R), Polynomial):
             l = lt.list()
-            return self._R._lc_(l[-1])
+            return self._R._recursive_lc_(l[-1])
         else:
             l = lt.list()
             return l[-1]
@@ -215,7 +232,7 @@ class Polynomial(Ring):
         fl = f.list()
         result = fl[-1]
         for i in range(len(fl) - 2, -1, -1):
-            result = result * a + fl[i]
+            result = self._R.add(self._R.mul(result, a), fl[i])
         return result
 
     # solo para una variable
@@ -242,3 +259,28 @@ class Polynomial(Ring):
         for i in range(1, len(flist)):
             on = self._R.add(abs(flist[i]), on)
         return on
+
+    def prod_list(self, l):
+        prod = self.one()
+        # tipos!
+        for i in l:
+            prod = self.mul(prod, i)
+        return prod
+
+    # a y b son vectores (listas) con coeficientes en self
+    # el input "viene" de un dominio superior y el ouput vive en self
+    def prod_esc(self, a, b):
+        assert len(a) == len(b)
+        sol = self.zero()
+        for i in range(0, len(a)):
+            sol = self.add(sol, self.mul(a[i], b[i]))
+        return sol
+
+    def p_adic_taylor_series(self, f, g):
+        pol = f
+        l = []
+        while pol != self.zero():
+            q, m = self.quo_rem(pol, g)
+            l.append(m)
+            pol = q
+        return l
