@@ -1,15 +1,16 @@
 def eea_lift(a, b, p, l, R):
     import Structures.Polynomial
     import Structures.IntegersModuleP
+
     IMP = Structures.IntegersModuleP.IntegersModuleP(p)
     ZPX = Structures.Polynomial.Polynomial(IMP, 'x')
-    x = R.get_variable()
     ZPXtv = ZPX.get_true_value()
     Rtv = R.get_true_value()
 
     amodp = ZPXtv(a.list())
     bmodp = ZPXtv(b.list())
     g, s, t = ZPX.extended_euclides(amodp, bmodp)
+    assert g == ZPX.one()
     smodp = s
     tmodp = t
     modulus = p
@@ -78,12 +79,30 @@ def univariate_diophant(al, x, m, p, l, R):
             result.append(R.symmetric_module(Rtv(rem.list()), pl))
     else:
         s = eea_lift(al[1], al[0], p, l, R)
-        q = R.symmetric_module(R.quo(R.mul(xm, s[0]), al[0]), pl)
-        r1 = R.symmetric_module(R.mod(R.mul(xm, s[0]), al[0]), pl)
+        xms0 = IMPXtv(R.mul(xm, s[0]).list())
+        qxms0, mxms0 = IMPX.quo_rem(xms0, IMPXtv(al[0].list()))
+        q = R.symmetric_module(Rtv(qxms0.list()), pl)
+        r1 = R.symmetric_module(Rtv(mxms0.list()), pl)
         r2 = R.symmetric_module(R.add(R.mul(xm, s[1]), R.mul(q, al[1])), pl)
         result = [r1, r2]
     return result
 
+
+def multivariate_diophant_assert_value(al, c, R):
+    sumdeg = 0
+
+    for i in al:
+        gr = 0
+        tupla = R.generate_tuple_representation(i)
+        for exp, grad in tupla:
+            gr = max(gr, grad[-1])
+
+        sumdeg = sumdeg + gr
+    trc = R.generate_tuple_representation(c)
+    grc = 0
+    for exp, grad in trc:
+        grc = max(grc, grad[-1])
+    return sumdeg > grc
 
 
 
@@ -93,7 +112,9 @@ def univariate_diophant(al, x, m, p, l, R):
 # d > 0, maximo grado del resultado admisible
 # p = prime
 # k = p**k
-def multivariate_diophant(al, c, I, d , p , l, R):
+def multivariate_diophant(al, c, I, d, p, l, R):
+
+    assert multivariate_diophant_assert_value(al, c, R)
 
     import Structures.Integers
     Z = Structures.Integers.Integers()

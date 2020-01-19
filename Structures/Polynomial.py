@@ -276,11 +276,21 @@ class Polynomial(Ring):
             sol = self.add(sol, self.mul(a[i], b[i]))
         return sol
 
+    # def p_adic_taylor_series(self, f, g):
+    #     pol = f
+    #     l = []
+    #     while pol != self.zero():
+    #         q, m = self.quo_rem(pol, g)
+    #         l.append(m)
+    #         pol = q
+    #     return l
+
     def p_adic_taylor_series(self, f, g):
         pol = f
         l = []
+        c = -g.list()[0]
         while pol != self.zero():
-            q, m = self.quo_rem(pol, g)
+            m = self.evaluate(pol, c)
             l.append(m)
-            pol = q
+            pol = self.quo(self.sub(pol, m), g)
         return l
