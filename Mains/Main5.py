@@ -1,11 +1,11 @@
 from sage.all import *
 
-import Structures.Polynomial
+import Structures.FiniteFieldPolynomial
 import Structures.FiniteFields
 
 K = Structures.FiniteFields.FiniteFields(2,1, 'a')
 a = K.get_variable()
-R = Structures.Polynomial.Polynomial(K, 'x')
+R = Structures.FiniteFieldPolynomial.FiniteFieldPolynomial(K, 'x')
 x = R.get_variable()
 f = x**4 + x + 1
 g = x**2 + 1 # (x+1)**2
@@ -17,7 +17,7 @@ print(R.is_irreducible(h))
 
 K = Structures.FiniteFields.FiniteFields(3,3, 'a')
 a = K.get_variable()
-R = Structures.Polynomial.Polynomial(K, 'x')
+R = Structures.FiniteFieldPolynomial.FiniteFieldPolynomial(K, 'x')
 x = R.get_variable()
 i = x**2 + 1
 j = x**4 + 1 # (x**2+x+2)*(x**2+2*x+2)

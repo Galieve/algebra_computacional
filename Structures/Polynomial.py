@@ -206,12 +206,6 @@ class Polynomial(Ring):
             c, l = lis[-1]
             return l
 
-    def is_irreducible(self, f):
-        return self._finite_field_is_irreducible_(f)
-
-    def _finite_field_is_irreducible_(self, f):
-        return is_irreducible(f, self)
-
     def random_element_lim(self, a, b):
         return self._P.random_element(degree=(a, b))
 

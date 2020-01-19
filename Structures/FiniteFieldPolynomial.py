@@ -4,6 +4,7 @@ import Structures.FiniteFields
 import Structures.FiniteFieldsWrapper
 from Algorithms.Berlekamp import berlekamp_full
 from Algorithms.FiniteFieldFactorization import sfd, distinct_degree_decomposition, equal_degree_full_splitting
+from Algorithms.IrreducibilityTest import is_irreducible
 from Algorithms.SortPolynomials import lexicografic_mon
 
 
@@ -35,3 +36,5 @@ class FiniteFieldPolynomial(Structures.FieldPolynomial.FieldPolynomial):
     def berlekamp(self, f, k):
         return berlekamp_full(f, self, k)
 
+    def is_irreducible(self, f):
+        return is_irreducible(f, self)
