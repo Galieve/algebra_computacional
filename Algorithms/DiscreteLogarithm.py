@@ -1,8 +1,15 @@
+# Wikipedia
+
+
+# alpha, beta in IMP, x in R.
+# choose a "random" set for x and multiply x.
 # S3 == 0, S1 == 2, S2 == 1
 def new_xab(alpha, beta, x, a, b, R, IMP):
     import Structures.QuotientFiniteField
     if issubclass(type(R), Structures.QuotientFiniteField.QuotientFiniteField):
-        x0 = R.get_domain().recursive_lc(x).integer_representation()
+        tpr = R.get_domain().generate_tuple_representation(x)
+        x0, _ = tpr[0]
+        x0 = x0.integer_representation()
     else:
         xl = x.list()
         x0 = xl[0].lift()
@@ -14,6 +21,8 @@ def new_xab(alpha, beta, x, a, b, R, IMP):
         return R.mul(alpha, x), IMP.add(a, IMP.one()), b
 
 
+# beta, alpha in R, R == field, n order of <beta>
+# return x tal que beta**x = alpha or None (fail)
 def discrete_logarithm_n(alpha, beta, R, n):
     import Structures.IntegersModuleP
     IMP = Structures.IntegersModuleP.IntegersModuleP(n)

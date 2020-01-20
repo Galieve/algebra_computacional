@@ -1,3 +1,5 @@
+# Modern Computer Algebra
+
 from Structures.QuotientFiniteField import QuotientFiniteField
 from sage.matrix.all import Matrix
 
@@ -67,7 +69,10 @@ def berlekamp4_7(f, R, r, bl):
     else:
         return None
 
+# f in R, R FiniteFieldPolynomial, k in Z
 def berlekamp_k_times(f, R, k):
+    # r = dimension of the basis of the berlekamp algebra
+    # bl = basis of it
     r, bl = berlekamp1_3(f, R)
     if r == 1:
         return f
@@ -77,6 +82,7 @@ def berlekamp_k_times(f, R, k):
             return p
     return None
 
+# f in R, R FiniteFieldPolynomial, k in Z
 def berlekamp_full(f, R, k):
     g = berlekamp_k_times(f, R, k)
     if g is None:

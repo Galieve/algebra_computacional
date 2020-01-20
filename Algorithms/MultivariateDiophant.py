@@ -1,3 +1,5 @@
+# Algorithms for computer algebra
+
 def eea_lift(a, b, p, l, R):
     import Structures.Polynomial
     import Structures.IntegersModuleP

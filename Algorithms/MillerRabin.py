@@ -1,3 +1,6 @@
+# A computational introduction to number theory and algebra
+
+
 def get_th(n):
     t = n
     h = 0
@@ -6,6 +9,8 @@ def get_th(n):
         t = t // 2
     return t, h
 
+
+# ln = {a in Zn+, a**(t*2**h) == 1 and a**(t*2**(j+1)) == 1 => a**(t*2**j) == +-1}
 def check_ln(a, IMP, t, h):
     b = IMP.repeated_squaring(a, t)
     if b == IMP.one():
@@ -19,7 +24,6 @@ def check_ln(a, IMP, t, h):
     return False
 
 
-
 def miller_rabin(n, k):
     assert n > 1
     import Structures.IntegersModuleP
@@ -27,7 +31,7 @@ def miller_rabin(n, k):
 
     if n == 2:
         return True
-    elif n%2 == 0:
+    elif n % 2 == 0:
         return False
     t, h = get_th(n - 1)
 

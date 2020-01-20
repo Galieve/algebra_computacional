@@ -38,9 +38,10 @@ class FiniteFields(Field):
         self._p = p
         self._var = self._Poly_ring.get_variable()
 
+    # self._module es el polinomio irreducible asociado
     def inverse(self, a):
-        gcd, coeff, _ = self._Poly_ring.extended_euclides(a, self._module())
-        return self._Poly_ring.mod(coeff, self._module())
+        gcd, coeff, _ = self._Poly_ring.extended_euclides(a, self._module)
+        return self._Poly_ring.mod(coeff, self._module)
 
     def one(self):
         return 1 + 0 * self.get_variable()
@@ -77,6 +78,9 @@ class FiniteFields(Field):
 
     def get_char(self):
         return self._p
+
+    def get_exponent(self):
+        return self._k
 
     def get_random(self, inf=None, sup=None):
         return self.get_true_value().random_element(inf, sup)

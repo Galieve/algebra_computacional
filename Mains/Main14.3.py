@@ -53,7 +53,7 @@ sigma = multivariate_diophant(a, c, I, d, p, l, S)
 test_mv_diophantic(a, sigma, p, l, [y-2], d, S)
 
 a = [x*y, x**2+y, x + y, x**7 + 3*y**2]
-c = x**2 + y + x
+c = 7*y**8 - x**4*y**3 + y**2 + y + x + 1
 I = [3]
 p = 13
 l = 6

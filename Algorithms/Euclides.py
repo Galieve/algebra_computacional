@@ -1,5 +1,8 @@
+# Algorithms for computer algebra, Geddes et al
 
 
+# a, b in R, R es D.E.
+# return gcd(a, b)
 def euclides(a, b, R):
     c = R.normal(a)
     d = R.normal(b)
@@ -9,8 +12,8 @@ def euclides(a, b, R):
         d = r
     return R.normal(c)
 
-
-# given a*s+b*t=mcd(a,b) return (g = mcd(a,b), s, t)
+# a, b in R
+# return gcd(a,b), s, t tal que a * s + b * t = gcd(a, b)
 def extended_euclides(a, b, R):
     c = R.normal(a);
     d = R.normal(b)

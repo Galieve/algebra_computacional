@@ -1,3 +1,4 @@
+# Modern Computer Algebra
 # f is square_free
 # f es primitivo si f /cont(f) == f <=> cont(f) == 1
 # gcd(a_i) = cont(f)
@@ -9,12 +10,14 @@ from Algorithms.MathAuxiliar import factor
 
 import itertools
 
+
 def squarefree_charzero(f, R):
     f_ = R.derivate(f)
     u = R.gcd(f, f_)
     return R.quo(f, u)
 
-def findsubsets(S,m):
+
+def findsubsets(S, m):
     return list(map(set, itertools.combinations(S, m)))
 
 
@@ -26,17 +29,11 @@ def find_prime(l, sup):
         p = Z.get_random(2, sup)
     return p
 
+
 # R = Z[x], f elevado de Zpl[x] a Z[x]
 def minimize_max_norm(f, R, pl):
-    fl = f.list()
-    res = []
-    plm = pl // 2
-    for i in fl:
-        if i <= plm:
-            res.append(i)
-        else:
-            res.append(i - pl)
-    return R.get_true_value()(res)
+    return R.symmetric_module(f, pl)
+
 
 def minimize_max_norm_list(l, R, pl):
     res = []
@@ -63,7 +60,7 @@ def hensel_step(m, f, g, h, s, t, R):
     assert h.list()[-1] == R.get_domain().one()
 
     # convertimos los polinomios de Fp[x] a Fp**2[x]
-    F = Structures.IntegersModuleP.IntegersModuleP(m**2)
+    F = Structures.IntegersModuleP.IntegersModuleP(m ** 2)
     RP = Structures.Polynomial.Polynomial(F, 'x')
     RPtv = RP.get_true_value()
     f = RPtv(f.list())
@@ -143,10 +140,8 @@ def multifactor_hensel_lifting(p, lc, hlist, RP, f, R, l):
     s[0] = Rtv(s[0].list())
     t[0] = Rtv(t[0].list())
 
-
     # paso 5
     for j in range(1, d + 1):
-
         # paso 6
         m = Z.repeated_squaring(p, Z.repeated_squaring(2, j - 1))
         g_, h_, s_, t_ = hensel_step(m, f_, g[j - 1], h[j - 1], s[j - 1], t[j - 1], R)
@@ -181,6 +176,7 @@ def hensel_lifting(f, R):
     n = R.degree(f)
     F = R.get_domain()
     Z = Structures.Integers.Integers()
+
     if n == 1:
         return [f]
     b = f.list()[-1]
@@ -191,6 +187,8 @@ def hensel_lifting(f, R):
         list_lc = set(factor(-b))
     else:
         list_lc = []
+
+
     A = R.max_norm(f)
     B = sqrt(n + 1) * Z.repeated_squaring(2, n) * A * b
     C = Z.repeated_squaring(n + 1, 2 * n) * Z.repeated_squaring(A, 2 * n - 1)
@@ -211,7 +209,7 @@ def hensel_lifting(f, R):
         fmod = RP.get_true_value()(f.list())
         fder = RP.derivate(fmod)
 
-    logB = log(2*B + 1.0, p)
+    logB = log(2 * B + 1.0, p)
     l = int(ceil(logB))
 
     # paso 3
@@ -226,7 +224,7 @@ def hensel_lifting(f, R):
     r = len(flist)
 
     # paso 5
-    T = set([i for i in range(0, r )])
+    T = set([i for i in range(0, r)])
     s = 1
     G = []
     f_ = f
@@ -251,9 +249,7 @@ def hensel_lifting(f, R):
             for i in T:
                 if i in S:
                     continue
-                h_  = RL.mul(h_, RLtv(flist[i].list()))
-
-
+                h_ = RL.mul(h_, RLtv(flist[i].list()))
 
             # paso 9
 
@@ -261,7 +257,6 @@ def hensel_lifting(f, R):
             h_ = R.get_true_value()(h_.list())
             g_ = minimize_max_norm(g_, R, pl)
             h_ = minimize_max_norm(h_, R, pl)
-
 
             if F.mul(R.one_norm(g_), R.one_norm(h_)) <= B:
                 for i in S:
@@ -282,16 +277,20 @@ def hensel_lifting(f, R):
     G.append(f_)
     return G
 
+
 def hensel_full_lifting(f, R):
-    fl = f.list()
-    c = R.cont(f)
+
+    if f == R.zero():
+        return [f]
     l = []
-    if len(fl) == 0:
-        return [R.zero()]
-    elif c < 0:
-        l = [-1]
-        c = -c
-    if c > 1:
-        l.extend(factor(c))
+    if R.normal(f) != f:
+        l.append(-1)
+
+    b = R.cont(f)
+    f = R.primitive_part(f)
+
+    if b > 1:
+        l.extend(factor(b))
+
     l.extend(hensel_lifting(R.primitive_part(f), R))
     return l

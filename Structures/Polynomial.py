@@ -1,6 +1,5 @@
 from sage.rings.polynomial.polynomial_ring_constructor import PolynomialRing
 
-from Algorithms.IrreducibilityTest import is_irreducible
 from Algorithms.Primitive import primitive_euclidean
 from Algorithms.SortPolynomials import sort_polynomials, lexicografic_mon
 from Structures import Field
@@ -79,7 +78,6 @@ class Polynomial(Ring):
         return q
 
     def gcd(self, a, b):
-        # cuidao
         if issubclass(type(self._R), Field.Field):
             return super(Polynomial, self).gcd(a, b)
         else:
@@ -269,15 +267,6 @@ class Polynomial(Ring):
         for i in range(0, len(a)):
             sol = self.add(sol, self.mul(a[i], b[i]))
         return sol
-
-    # def p_adic_taylor_series(self, f, g):
-    #     pol = f
-    #     l = []
-    #     while pol != self.zero():
-    #         q, m = self.quo_rem(pol, g)
-    #         l.append(m)
-    #         pol = q
-    #     return l
 
     def p_adic_taylor_series(self, f, g):
         pol = f
