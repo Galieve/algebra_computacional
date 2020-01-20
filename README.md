@@ -32,6 +32,6 @@ Algoritmos opcionales:
         14.3. Algoritmo para ecuaciones diofánticas en varias variables (utilizando el lema de Hensel y la teoría p-ádica)
     15. Algoritmo de Hensel Lifting en el caso multivariante (Con bugs)
     
-    Autores: Enrique Román Calvo y Rubén Ruperto Díaz
+Autores: Enrique Román Calvo y Rubén Ruperto Díaz
     
-    Licencia: El código se poporciona bajo una licencia MIT
+Licencia: El código se poporciona bajo una licencia MIT
